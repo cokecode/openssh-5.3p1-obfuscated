@@ -157,6 +157,8 @@ kex_finish(Kex *kex)
 	kex->flags &= ~KEX_INIT_SENT;
 	xfree(kex->name);
 	kex->name = NULL;
+
+	packet_disable_obfuscation();
 }
 
 void

@@ -111,7 +111,7 @@
 typedef enum {
 	oBadOption,
 	oForwardAgent, oForwardX11, oForwardX11Trusted, oGatewayPorts,
-	oExitOnForwardFailure,
+	oExitOnForwardFailure, oObfuscateHandshake, oObfuscateKeyword,
 	oPasswordAuthentication, oRSAAuthentication,
 	oChallengeResponseAuthentication, oXAuthLocation,
 	oIdentityFile, oHostName, oPort, oCipher, oRemoteForward, oLocalForward,
@@ -235,6 +235,8 @@ static struct {
 #else
 	{ "zeroknowledgepasswordauthentication", oUnsupported },
 #endif
+	{ "obfuscatehandshake", oObfuscateHandshake },
+	{ "obfuscatekeyword", oObfuscateKeyword },
 
 	{ NULL, oBadOption }
 };
@@ -915,6 +917,15 @@ parse_int:
 		intptr = &options->visual_host_key;
 		goto parse_flag;
 
+	case oObfuscateHandshake:
+		intptr = &options->obfuscate_handshake;
+		goto parse_flag;
+
+	case oObfuscateKeyword:
+		options->obfuscate_handshake = 1;
+		charptr = &options->obfuscate_keyword;
+		goto parse_string;
+
 	case oUseRoaming:
 		intptr = &options->use_roaming;
 		goto parse_flag;
@@ -1071,6 +1082,8 @@ initialize_options(Options * options)
 	options->use_roaming = -1;
 	options->visual_host_key = -1;
 	options->zero_knowledge_password_authentication = -1;
+	options->obfuscate_handshake = 0;
+	options->obfuscate_keyword = NULL;
 }
 
 /*
